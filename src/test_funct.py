@@ -1,7 +1,7 @@
 import unittest
-from funct import split_nodes_delimiter
+from funct import split_nodes_delimiter, extract_markdown_images,extract_markdown_links
 from textnode import TextType,TextNode
-class TestSplitNodesDelimiter(unittest.TestCase):
+class TestFunc(unittest.TestCase):
 
     def test_code_delimiter(self):
         node = TextNode("Here is `inline code` example", TextType.TEXT)
@@ -55,6 +55,44 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         expected = [node]
         result = split_nodes_delimiter([node], "**", TextType.BOLD)
         self.assertEqual(result, expected)
+    def test_image_with_alt_text(self):
+        text = "Una imagen: ![Descripción](https://example.com/img.png)"
+        expected = [("Descripción", "https://example.com/img.png")]
+        self.assertEqual(extract_markdown_images(text), expected)
+
+    def test_image_without_alt_text(self):
+        text = "Sin texto alternativo: ![](https://example.com/img.png)"
+        expected = [("", "https://example.com/img.png")]
+        self.assertEqual(extract_markdown_images(text), expected)
+
+    def test_multiple_images(self):
+        text = "![Uno](url1) texto ![Dos](url2)"
+        expected = [("Uno", "url1"), ("Dos", "url2")]
+        self.assertEqual(extract_markdown_images(text), expected)
+
+    def test_no_images(self):
+        text = "Texto sin imágenes"
+        expected = []
+        self.assertEqual(extract_markdown_images(text), expected)
+    def test_simple_link(self):
+        text = "Un link: [Google](https://google.com)"
+        expected = [("Google", "https://google.com")]
+        self.assertEqual(extract_markdown_links(text), expected)
+
+    def test_multiple_links(self):
+        text = "[Uno](url1) y [Dos](url2)"
+        expected = [("Uno", "url1"), ("Dos", "url2")]
+        self.assertEqual(extract_markdown_links(text), expected)
+
+    def test_ignores_image(self):
+        text = "Esto es una imagen: ![img](url)"
+        expected = []
+        self.assertEqual(extract_markdown_links(text), expected)
+
+    def test_link_with_empty_text(self):
+        text = "Link sin texto: [](https://ejemplo.com)"
+        expected = [("", "https://ejemplo.com")]
+        self.assertEqual(extract_markdown_links(text), expected)
 
 
 if __name__ == "__main__":
