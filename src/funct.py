@@ -188,4 +188,4 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, bas
             # Para cada archivo markdown, generar su archivo html equivalente
             filename_html = os.path.splitext(entry)[0] + ".html"
             dest_path = os.path.join(dest_dir_path, filename_html)
-            generate_page(source_path, template_path, dest_path,, basepath="/")
+            generate_page(source_path, template_path, dest_path,basepath="/")
