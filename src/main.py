@@ -1,3 +1,4 @@
+import sys
 import os
 import shutil
 from funct import generate_pages_recursive
@@ -23,6 +24,7 @@ def copy_static(source, destination):
             copy_static(source_path, dest_path)
 
 def main():
+    basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     static_dir = os.path.join(base_dir, "static")
@@ -33,7 +35,7 @@ def main():
     remove_all_files(public_dir)
     copy_static(static_dir, public_dir)
 
-    generate_pages_recursive(content_dir, template_path, public_dir)
+    generate_pages_recursive(content_dir, template_path, public_dir,basepath )
 
 
 if __name__ == "__main__":

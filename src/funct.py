@@ -161,7 +161,7 @@ def extract_title(markdown):
         if line.startswith('# '): 
             return line[2:].strip() 
     raise Exception("No title found")
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath="/"):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path, "r", encoding="utf-8") as file:
         text_from = file.read()
@@ -171,19 +171,21 @@ def generate_page(from_path, template_path, dest_path):
         template_content = file.read()
     final_html = template_content.replace("{{ Title }}", title)
     final_html = final_html.replace("{{ Content }}", content)
+    final_html = final_html.replace('href="/', f'href="{basepath}')
+    final_html = final_html.replace('src="/', f'src="{basepath}')
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, "w", encoding="utf-8") as file:
         file.write(final_html)
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath="/"):
     for entry in os.listdir(dir_path_content):
         source_path = os.path.join(dir_path_content, entry)
 
         if os.path.isdir(source_path):
             # Si es carpeta, crear la ruta destino y llamar recursivamente
             new_dest_dir = os.path.join(dest_dir_path, entry)
-            generate_pages_recursive(source_path, template_path, new_dest_dir)
+            generate_pages_recursive(source_path, template_path, new_dest_dir, basepath)
         elif os.path.isfile(source_path) and source_path.endswith(".md"):
             # Para cada archivo markdown, generar su archivo html equivalente
             filename_html = os.path.splitext(entry)[0] + ".html"
             dest_path = os.path.join(dest_dir_path, filename_html)
-            generate_page(source_path, template_path, dest_path)
+            generate_page(source_path, template_path, dest_path,, basepath="/")
