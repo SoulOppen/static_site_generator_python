@@ -32,7 +32,8 @@ def main():
     content_dir = os.path.join(base_dir, "content")
     template_path = os.path.join(base_dir, "template.html")
 
-    remove_all_files(public_dir)
+    if os.path.exists(public_dir):
+        shutil.rmtree(public_dir)
     copy_static(static_dir, public_dir)
 
     generate_pages_recursive(content_dir, template_path, public_dir,basepath )
