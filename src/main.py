@@ -27,10 +27,10 @@ def main():
     basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    static_dir = os.path.join(base_dir, "static")
-    public_dir = os.path.join(base_dir, "docs")
-    content_dir = os.path.join(base_dir, "content")
-    template_path = os.path.join(base_dir, "template.html")
+    static_dir = os.path.join(base_dir, "./static")
+    public_dir = os.path.join(base_dir, "./docs")
+    content_dir = os.path.join(base_dir, "./content")
+    template_path = os.path.join(base_dir, "./template.html")
 
     if os.path.exists(public_dir):
         shutil.rmtree(public_dir)
